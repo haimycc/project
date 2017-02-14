@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" >
+        //回调函数
+        //需求:你跟你女朋友有去吃饭,吃完后,各回各家,回到家要发短信
+        function goHome(callback) {
+            console.log("吃完了..");
+            callback();
+        }
+
+        function sendMsg() {
+            console.log("到家了");
+        }
+//        goHome(sendMsg);
+
+        //匿名函数
+        goHome(function () {
+            console.log("发短信");
+        });
+
+        (function () {
+            console.log("hello");
+        })();
+
+        //闭包
+        var num=1;
+        function getNum() {
+            console.log(num);
+        }
+
+        //需求:定义一个count计数器
+//        var count = 0;
+//        function getCounnt() {
+//            return count++;
+//        }
+//        console.log(getCounnt());
+//        console.log(getCounnt());
+//        console.log(getCounnt());
+//        console.log(getCounnt());
+//        count = 0;
+//        console.log(getCounnt());
+
+        //减小count作用范围,增大getCount方法的作用范文
+        (function(){
+            var count = 0;
+            //扩大getCount方法的作用域
+            window.getCount=function(){
+                return ++count;
+            }
+        })();
+
+        console.log(getCount());
+        console.log(getCount());
+        console.log(getCount());
+        console.log(getCount());
+        count = 0;
+        console.log(getCount());
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        //对象克隆
+        var obj = new Object();
+        obj.name = "lucy";
+        obj.showName=function () {
+            return this.name;
+        }
+
+        var newObj=new Object();
+
+        for (var p in obj) {
+            //遍历出来的就是该对象的属性名称
+            newObj[p] = obj[p];
+        }
+        console.log(newObj);
+
+        //类的声明
+        function Person(name,age) {
+            this.name = name;
+            this.age = age;
+            //方式1:直接定义一个方法
+//            this.showName =function () {
+//                return this.name;
+//            }
+            //方式2:使用全局方法
+//            this.showName = showName;
+            //方式3:通过prototype来进行设置方法
+        }
+
+        Person.prototype.showName=function () {
+            return this.name;
+        }
+
+        //每次new一个对象都是新的
+        var person = new Person("lilu", 12);
+
+        var showName = function () {
+            return this.name;
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

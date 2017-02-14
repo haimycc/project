@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        //模拟jquery中的post方法
+        function post(url, data, callback, type) {
+            if (data instanceof Function) {
+                type = callback;
+                callback = data;
+                data = undefined;
+            }
+//            console.log("url=" + url + ",data=" + data + ",callback=" + callback + ",type=" + type)
+        }
+
+        post("baidu.com", function () {
+
+        }, "json");
+
+        var Person = [{
+            'id': 1,
+            'name': 'lily',
+            'age': 11,
+            'children': [
+                {'id': 11, 'name': 'lucy1', 'age': 12},
+                {'id': 12, 'name': 'lucy2', 'age': 12}
+            ]
+        }, {
+            'id': 2, 'name': 'lily',
+            'age': 1,
+            'children': {'id': 21, 'name': 'lucy', 'age': 12}
+        }
+        ]
+
+
+        function changeData(data) {
+            for (var i = 0; i < data.length; i++) {
+                var obj = data[i];
+                obj.text = obj.name;
+                delete obj.name;
+                if (obj.children) {
+                    arguments.callee(obj.children);//callee是调用当前函数,只在当前函数体中生效
+                }
+            }
+        }
+
+        changeData(Person);
+        console.log(Person);
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

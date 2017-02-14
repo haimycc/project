@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="aggressiveLazyLoading" value="false"/>
+		<setting name="lazyLoadTriggerMethods" value="clone"/>
+	</settings>
+
+    <typeAliases>
+        <typeAlias type="com.xmg.p2p.business.domain.Bid" alias="Bid"/>
+        <typeAlias type="com.xmg.p2p.business.domain.BidRequest" alias="BidRequest"/>
+        <typeAlias type="com.xmg.p2p.base.domain.Logininfo" alias="Logininfo"/>
+        <typeAlias type="com.xmg.p2p.business.domain.BidRequestAuditHistory" alias="BidRequestAuditHistory"/>
+        <typeAlias type="com.xmg.p2p.business.domain.PlatformBankInfo" alias="PlatformBankInfo"/>
+        <typeAlias type="com.xmg.p2p.business.domain.RechargeOffline" alias="RechargeOffline"/>
+        <typeAlias type="com.xmg.p2p.business.domain.AccountFlow" alias="AccountFlow"/>
+        <typeAlias type="com.xmg.p2p.business.domain.SystemAccount" alias="SystemAccount"/>
+        <typeAlias type="com.xmg.p2p.business.domain.SystemAccountFlow" alias="SystemAccountFlow"/>
+        <typeAlias type="com.xmg.p2p.business.domain.PaymentScheduleDetail" alias="PaymentScheduleDetail"/>
+        <typeAlias type="com.xmg.p2p.business.domain.PaymentSchedule" alias="PaymentSchedule"/>
+        <typeAlias type="com.xmg.p2p.business.domain.UserBankinfo" alias="UserBankinfo"/>
+        <typeAlias type="com.xmg.p2p.business.domain.MoneyWithDraw" alias="MoneyWithDraw"/>
+    </typeAliases>
+
+</configuration>

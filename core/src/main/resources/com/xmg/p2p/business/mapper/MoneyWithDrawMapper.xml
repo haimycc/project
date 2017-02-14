@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.business.mapper.MoneyWithDrawMapper">
+    <resultMap id="BaseResultMap" type="MoneyWithDraw">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="accountNumber" property="accountNumber" jdbcType="VARCHAR"/>
+        <result column="bankForkName" property="bankForkName" jdbcType="VARCHAR"/>
+        <result column="bankName" property="bankName" jdbcType="VARCHAR"/>
+        <result column="accountName" property="accountName" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="state" property="state" jdbcType="TINYINT"/>
+        <result column="chargeFee" property="chargeFee" jdbcType="DECIMAL"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="auditTime" property="auditTime" jdbcType="TIMESTAMP"/>
+        <result column="applyTime" property="applyTime" jdbcType="TIMESTAMP"/>
+        <association property="auditor" javaType="Logininfo" columnPrefix="au_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+        </association>
+        <association property="applier" javaType="Logininfo" columnPrefix="ap_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true"
+            keyProperty="id">
+    insert into `moneywithdraw` (accountNumber, bankForkName, bankName, 
+      accountName, amount, state, 
+      chargeFee, remark, auditTime, 
+      applyTime, auditor_id, applier_id
+      )
+    values (#{accountNumber,jdbcType=VARCHAR}, #{bankForkName,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{accountName,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{state,jdbcType=TINYINT}, 
+      #{chargeFee,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{applyTime,jdbcType=TIMESTAMP}, #{auditor.id,jdbcType=BIGINT}, #{applier.id,jdbcType=BIGINT}
+      )
+  </insert>
+    <update id="updateByPrimaryKey">
+    update `moneywithdraw`
+    set accountNumber = #{accountNumber,jdbcType=VARCHAR},
+      bankForkName = #{bankForkName,jdbcType=VARCHAR},
+      bankName = #{bankName,jdbcType=VARCHAR},
+      accountName = #{accountName,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      state = #{state,jdbcType=TINYINT},
+      chargeFee = #{chargeFee,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      auditTime = #{auditTime,jdbcType=TIMESTAMP},
+      applyTime = #{applyTime,jdbcType=TIMESTAMP},
+      auditor_id = #{auditor.id,jdbcType=BIGINT},
+      applier_id = #{applier.id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <sql id="base_column">
+         m.id,m.accountNumber,m.bankForkName,m.bankName
+         ,m.accountName,m.amount,m.state,m.chargeFee,m.remark,m.auditTime,m.applyTime
+         ,ap.username AS ap_username, au.username AS au_username,ap.id AS ap_id, au.id AS au_id
+    </sql>
+
+    <sql id="base_table">
+        `moneywithdraw` m join logininfo ap on m.applier_id=ap.id
+        left join logininfo au on m.auditor_id = au.id
+    </sql>
+
+    <sql id="base_where">
+        <where>
+            <if test="state > -1">
+                AND m.state=#{state}
+            </if>
+            <if test="beginDate">
+                AND m.applyTime &gt;=#{beginDate}
+            </if>
+            <if test="endDate">
+                AND m.applyTime &lt;=#{endDate}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="base_column"/>
+        FROM
+        <include refid="base_table"/>
+        WHERE m.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryForCount" resultType="int">
+        SELECT
+        count(m.id)
+        FROM
+        <include refid="base_table"/>
+        <include refid="base_where"/>
+    </select>
+    <select id="query" resultMap="BaseResultMap">
+        SELECT
+        <include refid="base_column"/>
+        FROM
+        <include refid="base_table"/>
+        <include refid="base_where"/>
+        limit #{beginIndex},#{pageSize}
+    </select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        //类的继承
+        function Person(name, age) {
+            this.name = name;
+            this.age = age;
+            this.showName = function () {
+                return this.name;
+            }
+        }
+
+        Person.prototype.showAge = function () {
+            return this.age;
+        }
+
+        //高级继承,继承原形链
+        //instanceof 是通过判断原形链来判断的
+        //设置一个原形链为Person;
+        Employee.prototype = new Person();
+
+        //子类
+        function Employee(name, age, workYear) {
+            //调用父类的构造方法来设置属性,这时候传入的this和父类构造方法中的this是同一个对象
+            Person.call(this, name, age);
+            this.workYear = workYear;
+        }
+
+        for (var p in Person.prototype) {
+            console.log(p);
+            Employee.prototype[p] = Person.prototype[p];
+        }
+
+        var e = new Employee("lucy", 19, 2);
+        console.log(e);
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

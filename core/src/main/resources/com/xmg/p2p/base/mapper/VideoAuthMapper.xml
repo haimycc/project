@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.base.mapper.VideoAuthMapper">
+    <resultMap id="BaseResultMap" type="com.xmg.p2p.base.domain.VideoAuth">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="state" property="state" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="auditTime" property="auditTime" jdbcType="TIMESTAMP"/>
+        <result column="applyTime" property="applyTime" jdbcType="TIMESTAMP"/>
+
+        <association property="applier" javaType="com.xmg.p2p.base.domain.Logininfo" columnPrefix="ap_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+        </association>
+        <association property="auditor" javaType="com.xmg.p2p.base.domain.Logininfo" columnPrefix="au_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+        </association>
+
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    insert into `videoauth` (state, remark, auditTime, applyTime, auditor_id, applier_id)
+    values (#{state,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP},
+      #{applyTime,jdbcType=TIMESTAMP}, #{auditor.id,jdbcType=BIGINT}, #{applier.id,jdbcType=BIGINT})
+  </insert>
+
+    <sql id="base_column">
+            v.id,
+            v.state,
+            v.remark,
+            v.auditTime,
+            v.applyTime,
+            ap.id       AS ap_id,
+            ap.username AS ap_username,
+            au.id       AS au_id,
+            au.username AS au_username
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        SELECT <include refid="base_column"/>
+        FROM <include refid="base_table"/>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <sql id="base_where">
+        <where>
+            <if test="state > -1">
+                AND v.state=#{state}
+            </if>
+            <if test="beginDate">
+                AND v.applyTime &gt;=#{beginDate}
+            </if>
+            <if test="endDate">
+                AND v.applyTime &lt;=#{endDate}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="base_table">
+        videoauth v
+        JOIN logininfo ap ON v.applier_id = ap.id
+        JOIN logininfo au ON v.auditor_id = au.id
+    </sql>
+
+    <select id="queryForCount" resultType="int">
+        SELECT COUNT(v.id)
+        FROM videoauth v
+        <include refid="base_where"/>
+    </select>
+
+    <select id="query" resultMap="BaseResultMap">
+        SELECT
+        <include refid="base_column"/>
+        FROM <include refid="base_table"/>
+        <include refid="base_where"/>
+        LIMIT #{beginIndex},#{pageSize}
+    </select>
+
+</mapper>
